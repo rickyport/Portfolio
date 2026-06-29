@@ -1,0 +1,496 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="notes-page">
+
+<h1>Design Patterns: A Beginner-Friendly Guide</h1>
+
+<div class="section">
+<p>
+Design patterns are proven solutions to common software design problems. They are not libraries or frameworks. Instead, they are reusable ideas that help developers write code that is:
+</p>
+
+<ul>
+    <li>Easier to maintain</li>
+    <li>More flexible</li>
+    <li>Easier to test</li>
+    <li>Easier to extend</li>
+    <li>Better organized</li>
+</ul>
+
+<p>
+Think of design patterns like architectural blueprints. An architect doesn't redesign doors and windows for every house; similarly, developers don't reinvent solutions to common problems.
+</p>
+</div>
+
+<div class="section">
+<h2>What Is a Design Pattern?</h2>
+<p>A design pattern describes:</p>
+<ul>
+    <li>A recurring problem</li>
+    <li>A reusable solution</li>
+    <li>When to apply it</li>
+    <li>Its pros and cons</li>
+</ul>
+
+<p><b>Example:</b></p>
+<p>Problem: Only one database connection manager should exist.</p>
+<p>Solution: Use the Singleton pattern.</p>
+</div>
+
+<div class="section">
+<h2>Categories of Design Patterns</h2>
+
+<table>
+<tr>
+    <th>Category</th>
+    <th>Purpose</th>
+</tr>
+<tr>
+    <td>Creational</td>
+    <td>Object creation</td>
+</tr>
+<tr>
+    <td>Structural</td>
+    <td>Object composition</td>
+</tr>
+<tr>
+    <td>Behavioral</td>
+    <td>Object interaction</td>
+</tr>
+</table>
+
+<p>There are 23 classic patterns.</p>
+</div>
+
+<div class="section">
+<h2>Creational Patterns</h2>
+<p>These deal with creating objects.</p>
+
+<h3>1. Singleton Pattern</h3>
+<p><b>Problem:</b> Only one object should exist.</p>
+
+<p><b>Example</b></p>
+<ul>
+    <li>Database connection</li>
+    <li>Logger</li>
+    <li>Configuration manager</li>
+</ul>
+
+<pre>
+class Database:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+db1 = Database()
+db2 = Database()
+
+print(db1 is db2)  # True
+</pre>
+
+<p><b>Advantages:</b></p>
+<ul>
+    <li>Saves resources</li>
+    <li>Global access point</li>
+</ul>
+
+<p><b>Disadvantages:</b></p>
+<ul>
+    <li>Harder to test</li>
+    <li>Can create hidden dependencies</li>
+</ul>
+
+<h3>2. Factory Pattern</h3>
+<p><b>Problem:</b> Object creation logic becomes complicated.</p>
+
+<p><b>Example</b></p>
+<ul>
+    <li>Creating different notification services.</li>
+</ul>
+
+<pre>
+class Email:
+    def send(self):
+        print("Email sent")
+
+class SMS:
+    def send(self):
+        print("SMS sent")
+
+class NotificationFactory:
+    @staticmethod
+    def create(notification_type):
+        if notification_type == "email":
+            return Email()
+        elif notification_type == "sms":
+            return SMS()
+
+service = NotificationFactory.create("email")
+service.send()
+</pre>
+
+<p><b>Real-world uses:</b></p>
+<ul>
+    <li>Payment gateways</li>
+    <li>Database drivers</li>
+    <li>UI components</li>
+</ul>
+
+<h3>3. Builder Pattern</h3>
+<p><b>Problem:</b> Objects require many optional parameters.</p>
+
+<pre>
+class Computer:
+    def __init__(self):
+        self.cpu = None
+        self.ram = None
+        self.storage = None
+
+class ComputerBuilder:
+    def __init__(self):
+        self.computer = Computer()
+
+    def add_cpu(self, cpu):
+        self.computer.cpu = cpu
+        return self
+
+    def add_ram(self, ram):
+        self.computer.ram = ram
+        return self
+
+    def build(self):
+        return self.computer
+
+pc = (
+    ComputerBuilder()
+    .add_cpu("Intel i9")
+    .add_ram("32GB")
+    .build()
+)
+</pre>
+</div>
+
+<div class="section">
+<h2>Structural Patterns</h2>
+<p>These organize classes and objects.</p>
+
+<h3>4. Adapter Pattern</h3>
+<p><b>Problem:</b> Two incompatible interfaces must work together.</p>
+
+<p><b>Example</b></p>
+<ul>
+    <li>Old payment API + new payment system.</li>
+</ul>
+
+<pre>
+class OldPrinter:
+    def old_print(self):
+        print("Printing")
+
+class PrinterAdapter:
+    def __init__(self, printer):
+        self.printer = printer
+
+    def print(self):
+        self.printer.old_print()
+
+adapter = PrinterAdapter(OldPrinter())
+adapter.print()
+</pre>
+
+<h3>5. Decorator Pattern</h3>
+<p><b>Problem:</b> Add functionality without changing existing code.</p>
+
+<pre>
+def uppercase(func):
+    def wrapper():
+        return func().upper()
+    return wrapper
+
+@uppercase
+def greet():
+    return "hello"
+
+print(greet())
+</pre>
+
+<p><b>Used in:</b></p>
+<ul>
+    <li>Authentication</li>
+    <li>Logging</li>
+    <li>Flask routes</li>
+    <li>Caching</li>
+</ul>
+
+<h3>6. Facade Pattern</h3>
+<p><b>Problem:</b> Complex systems expose too many details.</p>
+
+<pre>
+class CPU:
+    def start(self):
+        print("CPU started")
+
+class Memory:
+    def load(self):
+        print("Memory loaded")
+
+class Computer:
+    def start(self):
+        CPU().start()
+        Memory().load()
+
+pc = Computer()
+pc.start()
+</pre>
+</div>
+
+<div class="section">
+<h2>Behavioral Patterns</h2>
+
+<p>These control communication between objects.</p>
+
+<h3>7. Observer Pattern</h3>
+<p><b>Problem:</b> One object changes and others need notification.</p>
+
+<p><b>Examples:</b></p>
+<ul>
+    <li>Stock prices</li>
+    <li>Event systems</li>
+    <li>GUI buttons</li>
+    <li>Notifications</li>
+</ul>
+
+<pre>
+class Subscriber:
+    def update(self, message):
+        print(message)
+
+class Channel:
+    def __init__(self):
+        self.subscribers = []
+
+    def subscribe(self, sub):
+        self.subscribers.append(sub)
+
+    def notify(self, msg):
+        for sub in self.subscribers:
+            sub.update(msg)
+
+channel = Channel()
+channel.subscribe(Subscriber())
+
+channel.notify("New video uploaded!")
+</pre>
+
+<h3>8. Strategy Pattern</h3>
+<p><b>Problem:</b> Multiple algorithms can solve the same problem.</p>
+
+<p><b>Examples:</b></p>
+<ul>
+    <li>payment methods.</li>
+</ul>
+
+<pre>
+class CreditCard:
+    def pay(self):
+        print("Paid with card")
+
+class PayPal:
+    def pay(self):
+        print("Paid with PayPal")
+
+class Checkout:
+    def __init__(self, payment):
+        self.payment = payment
+
+    def process(self):
+        self.payment.pay()
+
+Checkout(PayPal()).process()
+</pre>
+
+<h3>9. Command Pattern</h3>
+<p><b>Problem:</b> Encapsulate actions as objects.</p>
+
+<pre>
+class Light:
+    def on(self):
+        print("Light ON")
+
+class LightCommand:
+    def __init__(self, light):
+        self.light = light
+
+    def execute(self):
+        self.light.on()
+
+cmd = LightCommand(Light())
+cmd.execute()
+</pre>
+
+<p><b>Used in:</b></p>
+<ul>
+    <li>Undo/Redo</li>
+    <li>Task queues</li>
+    <li>Remote controls</li>
+</ul>
+
+</div>
+
+<div class="section">
+<h2>SOLID Principles</h2>
+
+<table>
+<tr>
+    <th>Principle</th>
+    <th>Meaning</th>
+</tr>
+<tr>
+    <td>S</td>
+    <td>Single Responsibility</td>
+</tr>
+<tr>
+    <td>O</td>
+    <td>Open/Closed</td>
+</tr>
+<tr>
+    <td>L</td>
+    <td>Liskov Substitution</td>
+</tr>
+<tr>
+    <td>I</td>
+    <td>Interface Segregation</td>
+</tr>
+<tr>
+    <td>D</td>
+    <td>Dependency Inversion</td>
+</tr>
+</table>
+</div>
+
+<div class="section">
+<h2>When NOT to Use Design Patterns</h2>
+<ul>
+    <li>The problem is simple</li>
+    <li>Code becomes more complex</li>
+    <li>Used only to appear “architectural”</li>
+</ul>
+</div>
+
+<div class="section">
+
+<h2>E-commerce Checkout Example</h2>
+
+<p>
+Imagine an online store checkout system. Modern applications often combine multiple design patterns to handle different responsibilities cleanly.
+</p>
+
+<table>
+    <tr>
+        <th>Problem</th>
+        <th>Pattern</th>
+    </tr>
+    <tr>
+        <td>Multiple payment methods</td>
+        <td>Strategy</td>
+    </tr>
+    <tr>
+        <td>Create payment objects</td>
+        <td>Factory</td>
+    </tr>
+    <tr>
+        <td>Send notifications</td>
+        <td>Observer</td>
+    </tr>
+    <tr>
+        <td>Logging requests</td>
+        <td>Decorator</td>
+    </tr>
+    <tr>
+        <td>Build orders</td>
+        <td>Builder</td>
+    </tr>
+    <tr>
+        <td>Simplify APIs</td>
+        <td>Facade</td>
+    </tr>
+</table>
+
+<p>
+Modern applications rarely use a single design pattern. Instead, they combine multiple patterns together to build scalable, maintainable systems.
+</p>
+
+</div>
+
+<div class="section">
+
+<h2>Real-World Examples</h2>
+
+<p>
+Design patterns are not just theoretical concepts. They are widely used in modern frameworks, libraries, and cloud systems.
+</p>
+
+<table>
+    <tr>
+        <th>Technology</th>
+        <th>Pattern</th>
+    </tr>
+    <tr>
+        <td>Flask decorators</td>
+        <td>Decorator</td>
+    </tr>
+    <tr>
+        <td>Django signals</td>
+        <td>Observer</td>
+    </tr>
+    <tr>
+        <td>SQLAlchemy session</td>
+        <td>Singleton</td>
+    </tr>
+    <tr>
+        <td>React components</td>
+        <td>Composite</td>
+    </tr>
+    <tr>
+        <td>Logging frameworks</td>
+        <td>Singleton</td>
+    </tr>
+    <tr>
+        <td>Dependency Injection containers</td>
+        <td>Factory</td>
+    </tr>
+    <tr>
+        <td>AWS SDK clients</td>
+        <td>Builder</td>
+    </tr>
+    <tr>
+        <td>Payment gateways</td>
+        <td>Strategy</td>
+    </tr>
+</table>
+
+<p>
+These examples show how design patterns are embedded in everyday tools and frameworks used in production systems.
+</p>
+
+</div>
+
+<div class="section">
+<h2>Mini Project Idea</h2>
+<ul>
+    <li>Strategy → payment methods</li>
+    <li>Factory → object creation</li>
+    <li>Observer → notifications</li>
+    <li>Builder → order creation</li>
+    <li>Decorator → logging</li>
+</ul>
+</div>
+
+</div>
+
+{% endblock %}

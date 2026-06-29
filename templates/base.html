@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ricky Portugal</title>
+
+    <!-- IMPORTANT: Mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <!-- Hamburger (left) -->
+    <div class="hamburger" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <!-- Name -->
+    <div class="logo">
+    <div class="name">Ricky Portugal</div>
+    <div class="title">
+        Software Engineer | Data Engineer | Data Architect
+    </div>
+</div>
+
+    <!-- Nav Links -->
+    <ul id="nav-links">
+        <li><a href="/" class="{% if active_page == 'home' %}active{% endif %}">Home</a></li>
+        <li><a href="/about" class="{% if active_page == 'about' %}active{% endif %}">About</a></li>
+        <li><a href="/resume" class="{% if active_page == 'resume' %}active{% endif %}">Resume</a></li>
+        <li><a href="/study" class="{% if active_page == 'study' %}active{% endif %}">Study</a></li>
+        <li><a href="/contact" class="{% if active_page == 'contact' %}active{% endif %}">Contact</a></li>
+    </ul>
+
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer>
+    © 2026 Ricky Portugal
+</footer>
+
+<!-- JS for hamburger toggle -->
+<script>
+function toggleMenu() {
+    document.getElementById("nav-links").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>
