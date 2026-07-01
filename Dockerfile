@@ -1,27 +1,31 @@
-# Use official Python image
+# Use stable Python version (IMPORTANT)
 FROM python:3.11-slim
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# install compiler tools (FIX)
+# Install system dependencies (needed for pandas/numpy builds if ever required)
 RUN apt-get update && apt-get install -y \
     build-essential \
     gcc \
     g++ \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first (for caching)
+# Upgrade pip first (prevents many build issues)
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Copy requirements first (better Docker caching)
 COPY requirements.txt .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files
+# Copy application code
 COPY . .
 
 # Expose Flask port
 EXPOSE 5000
 
-# Run the app
+# Run Flask app (production-safe alternative)
 CMD ["python", "app.py"]
