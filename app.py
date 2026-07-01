@@ -1,21 +1,32 @@
 """Personal HomePage"""
 import os
-from dotenv import load_dotenv
 from flask import Flask, render_template, request
-from flask_mail import Mail, Message
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
 
-# Gmail SMTP config
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+def send_email(name, email, message):
+    sg = SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
 
-mail = Mail(app)
+    msg = Mail(
+        from_email=os.environ.get("MAIL_FROM"),
+        to_emails=os.environ.get("MAIL_FROM"),
+        subject=f"New Contact Form Message from {name}",
+        plain_text_content=f"""
+Name: {name}
+Email: {email}
+
+Message:
+{message}
+"""
+    )
+
+    response = sg.send(msg)
+    return response.status_code
 
 @app.route("/")
 def home():
@@ -68,23 +79,7 @@ def contact():
         email = request.form["email"]
         message = request.form["message"]
 
-        msg = Message(
-            subject=f"New Contact Form Message from {name}",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[os.getenv("MAIL_RECIPIENT")],
-            reply_to=email
-        )
-
-        msg.body = f"""
-        Name: {name}
-        Email: {email}
-
-        Message:
-        {message}
-        """
-
-        mail.send(msg)
-
+        send_email(name, email, message)
         return "Message sent successfully!"
 
     return render_template("contact.html", active_page="contact")

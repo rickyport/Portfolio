@@ -2,14 +2,28 @@
 
 {% block content %}
 
-<h1>Contact Me</h1>
+<div class="contact-page">
 
-<form method="POST">
-    <input type="text" name="name" placeholder="Name" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <textarea name="message" placeholder="Message" required></textarea>
+    <h1 class="page-title">Contact</h1>
 
-    <button type="submit">Send Message</button>
-</form>
+    <div class="about-card">
+
+        <p class="about-text">
+            I'm currently updating my contact system.
+        </p>
+
+        <p class="about-text">
+            In the meantime, please reach out via LinkedIn:
+        </p>
+
+        <a href="https://www.linkedin.com/in/ricky-portugal"
+           target="_blank"
+           class="profile-link">
+            LinkedIn Profile
+        </a>
+
+    </div>
+
+</div>
 
 {% endblock %}
